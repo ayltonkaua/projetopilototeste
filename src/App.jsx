@@ -57,17 +57,25 @@ const App = () => {
     Object.keys(files).forEach(fileName => {
       if (fileName.endsWith('.css')) {
         const cssContent = files[fileName];
-        htmlContent = htmlContent.replace(
-          '</head>',
-          `<style>${cssContent}</style></head>`
-        );
+        if (htmlContent.includes('</head>')) {
+          htmlContent = htmlContent.replace(
+            '</head>',
+            `<style>${cssContent}</style></head>`
+          );
+        } else {
+          htmlContent = `<style>${cssContent}</style>\n${htmlContent}`;
+        }
       }
       if (fileName.endsWith('.js') && !fileName.includes('node_modules')) {
         const jsContent = files[fileName];
-        htmlContent = htmlContent.replace(
-          '</body>',
-          `<script>${jsContent}</script></body>`
-        );
+        if (htmlContent.includes('</body>')) {
+          htmlContent = htmlContent.replace(
+            '</body>',
+            `<script>${jsContent}</script></body>`
+          );
+        } else {
+          htmlContent = `${htmlContent}\n<script>${jsContent}</script>`;
+        }
       }
     });
 
@@ -109,13 +117,25 @@ const App = () => {
   const extractFilesFromResponse = (content) => {
     const files = {};
     
-    // Tentar extrair JSON primeiro
-    const jsonMatch = content.match(/\{[\s\S]*\}$/m);
-    if (jsonMatch) {
-      try {
-        return JSON.parse(jsonMatch[0]);
-      } catch (e) {
-        console.log("JSON não encontrado, tentando extrair blocos de código...");
+    // Tentar extrair JSON primeiro - melhorar a regex
+    const jsonMatches = content.match(/\{[\s\S]*?"[^"]*\.(html|css|js|jsx|ts|tsx|py|php|java|cpp|c|json|md)"[\s\S]*?\}/g);
+    if (jsonMatches) {
+      for (const jsonMatch of jsonMatches) {
+        try {
+          const parsed = JSON.parse(jsonMatch);
+          // Verificar se é um objeto com arquivos válidos
+          for (const [key, value] of Object.entries(parsed)) {
+            if (typeof key === 'string' && typeof value === 'string' && 
+                key.includes('.') && value.trim().length > 10) {
+              files[key] = value;
+            }
+          }
+          if (Object.keys(files).length > 0) {
+            return files;
+          }
+        } catch (e) {
+          console.log("JSON parse failed:", e.message);
+        }
       }
     }
 
@@ -128,21 +148,27 @@ const App = () => {
         
         // Tentar extrair nome do arquivo da primeira linha
         let fileName = `arquivo${index + 1}`;
-        if (firstLine.includes('.')) {
-          const matches = firstLine.match(/[\w\-\.]+\.(html|css|js|jsx|ts|tsx|py|php|java|cpp|c|json|md)/);
-          if (matches) {
-            fileName = matches[0];
+        
+        // Procurar por extensões comuns na primeira linha
+        const fileNameMatch = firstLine.match(/[\w\-\.]+\.(html|css|js|jsx|ts|tsx|py|php|java|cpp|c|json|md)/i);
+        if (fileNameMatch) {
+          fileName = fileNameMatch[0];
+        } else {
+          // Detectar baseado no tipo de código
+          const cleanFirstLine = firstLine.toLowerCase();
+          if (cleanFirstLine.includes('html')) {
+            fileName = 'index.html';
+          } else if (cleanFirstLine.includes('css')) {
+            fileName = 'styles.css';
+          } else if (cleanFirstLine.includes('js') || cleanFirstLine.includes('javascript')) {
+            fileName = 'script.js';
+          } else if (cleanFirstLine.includes('python') || cleanFirstLine.includes('py')) {
+            fileName = 'main.py';
           }
-        } else if (firstLine.includes('html')) {
-          fileName = 'index.html';
-        } else if (firstLine.includes('css')) {
-          fileName = 'styles.css';
-        } else if (firstLine.includes('js') || firstLine.includes('javascript')) {
-          fileName = 'script.js';
         }
 
         const code = lines.slice(1, -1).join('\n');
-        if (code.trim()) {
+        if (code.trim() && code.length > 10) {
           files[fileName] = code;
         }
       });
@@ -152,6 +178,13 @@ const App = () => {
   };
 
   async function gerarProjeto() {
+    // Verificar se a API key está configurada
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+    if (!apiKey || apiKey === 'your_groq_api_key_here') {
+      setError('Por favor, configure sua API key da Groq no arquivo .env');
+      return;
+    }
+
     setLoading(true);
     setResponseText("");
     setFiles(null);
@@ -164,32 +197,30 @@ const App = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "meta-llama/llama-4-scout-17b-16e-instruct",
+          model: "llama3-8b-8192", // Modelo correto da Groq
           messages: [
             {
               role: "system",
-              content: "Você é um especialista em desenvolvimento. Sempre que gerar código, forneça arquivos completos e funcionais. Organize o código em arquivos separados e inclua comentários explicativos."
+              content: "Você é um especialista em desenvolvimento web. Sempre que gerar código, forneça arquivos completos e funcionais organizados em um JSON válido. Use nomes de arquivo apropriados e inclua comentários explicativos."
             },
             {
               role: "user",
-              content: `Crie um projeto completo e funcional com: ${prompt}. 
+              content: `Crie um projeto web completo e funcional: ${prompt}
 
-Requisitos:
+Requisitos importantes:
 - Forneça arquivos completos (HTML, CSS, JS se necessário)
-- Use nomes de arquivo apropriados
-- Inclua comentários explicativos
-- Certifique-se de que o código seja funcional
+- Use nomes de arquivo apropriados (index.html, styles.css, script.js)
+- Inclua comentários explicativos no código
+- Certifique-se de que o código seja funcional e bem estruturado
 
-Formato de resposta:
-Explique brevemente o projeto e depois forneça os arquivos em formato JSON:
-
+Formato de resposta OBRIGATÓRIO - retorne APENAS o JSON:
 {
-  "index.html": "código html aqui",
-  "styles.css": "código css aqui", 
-  "script.js": "código javascript aqui"
+  "index.html": "<!DOCTYPE html>\\n<html>\\n<head>\\n...",
+  "styles.css": "/* Estilos para o projeto */\\nbody { ... }",
+  "script.js": "// JavaScript funcional\\nfunction init() { ... }"
 }`,
             },
           ],
@@ -212,9 +243,12 @@ Explique brevemente o projeto e depois forneça os arquivos em formato JSON:
         if (Object.keys(extractedFiles).length > 0) {
           setSelectedFile(Object.keys(extractedFiles)[0]);
         }
+      } else {
+        setError('Não foi possível extrair arquivos da resposta da IA. Tente reformular seu prompt.');
       }
     } catch (err) {
-      setError(err.message);
+      console.error('Erro ao gerar projeto:', err);
+      setError(`Erro ao gerar projeto: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -233,7 +267,7 @@ Explique brevemente o projeto e depois forneça os arquivos em formato JSON:
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-white">
-          🤖 CodeBuddy IA - Gerador de Projetos
+          🤖 CodeBuddy IA - Gerador de Projetos v2.0
         </h1>
         
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
@@ -242,7 +276,7 @@ Explique brevemente o projeto e depois forneça os arquivos em formato JSON:
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ex: Uma landing page responsiva para uma pizzaria, um jogo da velha, um calculadora..."
+              placeholder="Ex: Uma landing page responsiva para uma pizzaria, um jogo da velha, uma calculadora..."
               className="flex-1 p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               onKeyPress={(e) => e.key === 'Enter' && !loading && gerarProjeto()}
             />
