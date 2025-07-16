@@ -1,8 +1,8 @@
-# 🤖 CodeBuddy IA - Gerador de Projetos
+# 🤖 CodeBuddy IA - Gerador de Projetos v2.0
 
 Um gerador inteligente de projetos que usa IA para criar código funcional e testável!
 
-## ✨ Funcionalidades
+## ✨ Funcionalidades v2.0
 
 - 🎯 **Geração Inteligente**: Descreva seu projeto e a IA cria códigos completos
 - 👁️ **Preview Funcional**: Visualize e teste seus projetos HTML/CSS/JS em tempo real
@@ -11,40 +11,59 @@ Um gerador inteligente de projetos que usa IA para criar código funcional e tes
 - 🎨 **Interface Moderna**: Design responsivo com modo escuro
 - 🔧 **Códigos Editáveis**: Modifique o código gerado diretamente na interface
 
-## 🚀 Como Usar
+## 🚀 Configuração Rápida
 
-1. **Configuração**:
-   ```bash
-   # Clone o projeto
-   git clone <repo-url>
-   cd codebuddy-ia
-   
-   # Instale dependências
-   npm install
-   
-   # Configure a API Key
-   cp .env.example .env
-   # Edite o arquivo .env com sua chave da Groq
-   ```
+### 1. Clone e Instale
+```bash
+git clone <repo-url>
+cd codebuddy-ia
+npm install
+```
 
-2. **Obter API Key Groq** (Gratuita):
-   - Acesse [console.groq.com](https://console.groq.com/keys)
-   - Crie uma conta gratuita
-   - Gere uma API key
-   - Cole no arquivo `.env`
+### 2. Configure a API Key da Groq (OBRIGATÓRIO)
 
-3. **Executar**:
-   ```bash
-   npm run dev
-   ```
+**Passo a passo:**
+1. Acesse [console.groq.com](https://console.groq.com/keys)
+2. Crie uma conta gratuita
+3. Gere uma API key
+4. Edite o arquivo `.env` e substitua `your_groq_api_key_here` pela sua chave:
 
-## 💡 Exemplos de Prompts
+```bash
+# Abra o arquivo .env
+nano .env
 
-- "Uma landing page para uma pizzaria com cardápio"
-- "Um jogo da velha interativo"
-- "Uma calculadora científica"
-- "Um portfólio pessoal responsivo"
-- "Um sistema de login simples"
+# Substitua por sua chave real:
+VITE_GROQ_API_KEY=gsk_SuaChaveAquiReal123456789
+```
+
+### 3. Execute o Projeto
+```bash
+npm run dev
+```
+
+## 🔧 Melhorias da v2.0
+
+### ✅ **Problemas Corrigidos:**
+- **API Model**: Corrigido modelo da Groq para `llama3-8b-8192`
+- **Extração de Arquivos**: Melhorada detecção de JSON e blocos de código
+- **Preview**: Corrigido injeção de CSS/JS para HTML sem tags padrão
+- **Tratamento de Erros**: Mensagens mais claras e validação de API key
+- **Performance**: Otimizações no parsing de respostas da IA
+
+### 🆕 **Novas Funcionalidades:**
+- Validação automática da API key
+- Melhor detecção de nomes de arquivo
+- Suporte a projetos sem estrutura HTML padrão
+- Mensagens de erro mais informativas
+- Versioning do título da aplicação
+
+## 💡 Exemplos de Prompts que Funcionam
+
+- "Uma landing page para uma pizzaria com cardápio interativo"
+- "Um jogo da velha funcional com JavaScript"
+- "Uma calculadora científica responsiva"
+- "Um portfólio pessoal moderno com animações CSS"
+- "Um sistema de to-do list com localStorage"
 
 ## 🛠️ Tecnologias
 
@@ -54,22 +73,43 @@ Um gerador inteligente de projetos que usa IA para criar código funcional e tes
 - **Tailwind CSS** - Estilização
 - **Groq API** - IA LLaMA para geração de código
 
-## 📋 Melhorias Implementadas
+## 🚨 Resolução de Problemas
 
-✅ **Preview Funcional**: Teste seus projetos em iframe sandbox
-✅ **Download de Arquivos**: Baixe códigos individualmente ou completos
-✅ **Detecção de Linguagem**: Syntax highlighting automático
-✅ **Editor Melhorado**: Edição em tempo real dos códigos gerados
-✅ **Interface Responsiva**: Layout em grid para melhor organização
-✅ **Extração Inteligente**: Suporte a JSON e blocos de código markdown
-✅ **UX Aprimorada**: Emojis, feedback visual e navegação intuitiva
+### Erro: "Configure sua API key da Groq"
+**Solução**: Verifique se o arquivo `.env` tem sua chave real da Groq.
+
+### Erro: "Não foi possível extrair arquivos"
+**Solução**: Reformule seu prompt sendo mais específico. Ex: "Uma página HTML simples com CSS azul"
+
+### Preview não funciona
+**Solução**: Certifique-se de que o projeto gerado inclui um arquivo .html
+
+### Erro de conexão com API
+**Solução**: Verifique sua internet e se a chave da Groq está válida
 
 ## 🎯 Como Funciona
 
 1. **Descreva**: Digite o que você quer criar
-2. **IA Gera**: A Groq IA cria arquivos completos e funcionais
+2. **IA Gera**: A Groq IA cria arquivos completos em JSON
 3. **Visualize**: Veja o código no Monaco Editor
 4. **Teste**: Use o preview para testar funcionalidades
 5. **Baixe**: Salve os arquivos para usar em seus projetos
 
-Agora seus códigos gerados pela IA são totalmente **visíveis**, **editáveis** e **testáveis**! 🚀
+## 📦 Deploy
+
+Para fazer build de produção:
+```bash
+npm run build
+```
+
+## 🤝 Contribuição
+
+Para subir a v2.0 para o GitHub:
+```bash
+git add .
+git commit -m "feat: CodeBuddy IA v2.0 - Funcionalidades corrigidas e melhoradas"
+git tag v2.0.0
+git push origin main --tags
+```
+
+**Agora seus códigos gerados pela IA são totalmente funcionais e testáveis!** 🚀
