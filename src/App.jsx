@@ -1,10 +1,3 @@
-Agradeço por apontar o erro\! Encontrei o problema:
-
-No código que te passei, na função `FileExplorer`, o último `</div>` antes do `return` foi digitado incorretamente como `</b>`. Isso causa um erro de sintaxe JSX porque a tag `<b>` não é um contêiner válido para o que ela está tentando fechar.
-
-Eu corrigi `</b>` para `</div>` no local apropriado. Por favor, substitua **todo o conteúdo do seu arquivo `App.jsx` (ou `App.js`)** pelo código abaixo.
-
-````javascript
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import JSZip from "jszip"; // Importe JSZip
