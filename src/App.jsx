@@ -1,19 +1,3 @@
-É comum que erros de deploy, especialmente aqueles relacionados a parsers como o `esbuild` no Vercel, sejam causados por pequenos detalhes na sintaxe JSX, como espaços em branco inesperados, quebras de linha ou caracteres invisíveis que o ambiente de build interpreta de forma diferente.
-
-O erro `"Expected "}" but found ">"` na linha 667 (referindo-se ao fechamento da `div` do painel de preview) sugere que o parser JSX esperava o fechamento de uma expressão JavaScript (`}`) mas encontrou o caractere `>` de uma tag HTML. Embora a sintaxe que eu sugeri anteriormente fosse tecnicamente válida, alguns ambientes de build podem ser mais sensíveis.
-
-A solução mais segura para textos misturados com tags `<br />` dentro de um `<p>` é envolver o texto em literais de string com chaves `{}`. Isso garante que o parser trate o conteúdo como texto explícito.
-
-Além disso, vou revisar as outras modificações para garantir a consistência.
-
-**Passos para a correção e melhoria:**
-
-1.  **Ajuste da Sintaxe JSX:** Modifiquei a seção do parágrafo de preview (`<p className="text-sm text-center">`) para envolver as strings de texto em chaves `{}`. Isso ajuda a esclarecer para o parser que são literais de string e não expressões JavaScript incompletas.
-2.  **Confirmação das Melhoras Anteriores:** As melhorias no prompt da IA, na lógica de extração e na funcionalidade de download ZIP já foram implementadas no código anterior e estão mantidas.
-
-Aqui está o código `App.js` atualizado com as correções para o erro do Vercel e todas as sugestões anteriores:
-
-````javascript
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import JSZip from "jszip"; // Importe JSZip
