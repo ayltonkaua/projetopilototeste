@@ -72,7 +72,7 @@ const LoadingAnimation = () => {
           <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
         </div>
       </div>
-    </div>
+    </b>
   );
 };
 
@@ -118,7 +118,7 @@ const FileExplorer = ({ files, selectedFile, onSelectFile, onDownloadFile }) => 
           <span className="ml-2 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
             {Object.keys(files).length}
           </span>
-        </b>
+        </h3>
       </div>
       <div className="p-2">
         {Object.keys(files).map((fileName) => (
@@ -155,7 +155,7 @@ const FileExplorer = ({ files, selectedFile, onSelectFile, onDownloadFile }) => 
           </div>
         ))}
       </div>
-    </div>
+    </b>
   );
 };
 
@@ -557,7 +557,7 @@ const App = () => {
                 onSelectFile={setSelectedFile}
                 onDownloadFile={downloadFile}
               />
-            </div>
+            </b>
 
             {/* Code Editor - Center */}
             <div className="col-span-6">
@@ -587,7 +587,7 @@ const App = () => {
                       </button>
                     )}
                   </div>
-                </div>
+                </b>
                 
                 <div className="h-[calc(100%-80px)]">
                   {selectedFile ? (
@@ -625,7 +625,7 @@ const App = () => {
                             >
                               🚀 Abrir Preview
                             </button>
-                          </div>
+                          </b>
                         ) : (
                           <p className="text-sm text-center">
                             {"Preview disponível apenas para"}<br />
@@ -636,9 +636,8 @@ const App = () => {
                       </div>
                     </div>
                   )}
-                </div>
-              </div>
-            </div>
+                </b>
+              </b>
           </div>
         )}
 
@@ -658,19 +657,17 @@ const App = () => {
                   <div>{"\"Landing page de restaurante\""}</div>
                   <div>{"\"App de lista de tarefas\""}</div>
                   <div>{"\"Galeria de fotos responsiva\""}</div>
-                </div>
+                </b>
                 <p className="mt-4 text-gray-500">
                     {"Dica: Seja o mais específico possível no seu prompt para obter melhores resultados!"}<br/>
                     {"Por exemplo: \"Um jogo da velha responsivo com JavaScript puro, com um placar, um botão de reset e animações suaves para a vitória.\""}
                 </p>
-              </div>
-            </div>
-          </div>
+              </b>
+            </b>
         )}
-      </div>
-    </div>
+      </b>
+    </b>
   );
 };
 
 export default App;
-````
