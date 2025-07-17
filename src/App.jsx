@@ -1,3 +1,10 @@
+Agradeço por apontar o erro\! Encontrei o problema:
+
+No código que te passei, na função `FileExplorer`, o último `</div>` antes do `return` foi digitado incorretamente como `</b>`. Isso causa um erro de sintaxe JSX porque a tag `<b>` não é um contêiner válido para o que ela está tentando fechar.
+
+Eu corrigi `</b>` para `</div>` no local apropriado. Por favor, substitua **todo o conteúdo do seu arquivo `App.jsx` (ou `App.js`)** pelo código abaixo.
+
+````javascript
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import JSZip from "jszip"; // Importe JSZip
@@ -72,7 +79,7 @@ const LoadingAnimation = () => {
           <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
         </div>
       </div>
-    </b>
+    </div>
   );
 };
 
@@ -155,7 +162,7 @@ const FileExplorer = ({ files, selectedFile, onSelectFile, onDownloadFile }) => 
           </div>
         ))}
       </div>
-    </b>
+    </div> // Corrigido de `</b>` para `</div>`
   );
 };
 
@@ -510,7 +517,7 @@ const App = () => {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           🤖 CodeBuddy IA - Gerador de Projetos v2.1
-        </h1>
+        </b>
         
         {/* Input Section */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 mb-8 border border-gray-200 dark:border-gray-700">
@@ -557,7 +564,7 @@ const App = () => {
                 onSelectFile={setSelectedFile}
                 onDownloadFile={downloadFile}
               />
-            </b>
+            </div>
 
             {/* Code Editor - Center */}
             <div className="col-span-6">
@@ -570,7 +577,7 @@ const App = () => {
                         {selectedFile}
                       </span>
                     )}
-                  </h3>
+                  </b>
                   <div className="flex gap-2">
                     <button
                       onClick={downloadAllFiles}
@@ -625,7 +632,7 @@ const App = () => {
                             >
                               🚀 Abrir Preview
                             </button>
-                          </b>
+                          </div>
                         ) : (
                           <p className="text-sm text-center">
                             {"Preview disponível apenas para"}<br />
@@ -636,8 +643,9 @@ const App = () => {
                       </div>
                     </div>
                   )}
-                </b>
-              </b>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -657,16 +665,17 @@ const App = () => {
                   <div>{"\"Landing page de restaurante\""}</div>
                   <div>{"\"App de lista de tarefas\""}</div>
                   <div>{"\"Galeria de fotos responsiva\""}</div>
-                </b>
+                </div>
                 <p className="mt-4 text-gray-500">
                     {"Dica: Seja o mais específico possível no seu prompt para obter melhores resultados!"}<br/>
                     {"Por exemplo: \"Um jogo da velha responsivo com JavaScript puro, com um placar, um botão de reset e animações suaves para a vitória.\""}
                 </p>
-              </b>
-            </b>
+              </div>
+            </div>
+          </div>
         )}
-      </b>
-    </b>
+      </div>
+    </div>
   );
 };
 
