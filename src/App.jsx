@@ -155,7 +155,7 @@ const FileExplorer = ({ files, selectedFile, onSelectFile, onDownloadFile }) => 
           </div>
         ))}
       </div>
-    </div> // Corrigido de `</b>` para `</div>`
+    </div>
   );
 };
 
@@ -510,7 +510,7 @@ const App = () => {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           🤖 CodeBuddy IA - Gerador de Projetos v2.1
-        </b>
+        </h1>
         
         {/* Input Section */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 mb-8 border border-gray-200 dark:border-gray-700">
@@ -570,7 +570,7 @@ const App = () => {
                         {selectedFile}
                       </span>
                     )}
-                  </b>
+                  </h3>
                   <div className="flex gap-2">
                     <button
                       onClick={downloadAllFiles}
@@ -587,7 +587,7 @@ const App = () => {
                       </button>
                     )}
                   </div>
-                </b>
+                </div>
                 
                 <div className="h-[calc(100%-80px)]">
                   {selectedFile ? (
@@ -673,3 +673,4 @@ const App = () => {
 };
 
 export default App;
+````
